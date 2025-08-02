@@ -23,24 +23,28 @@ class HueApi {
     bool inTransition;
     float maxDist;
 
-    void convRgbToXy(int r, int g, int b, uint8_t bri, float X, float Y) { 
+    void convRgbToXy(int r, int g, int b, uint8_t &bri, float &X, float &Y) {
       float x, y, z;
-      
-      r = (r > 0.04045) ? pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
-      g = (g > 0.04045) ? pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
-      b = (b > 0.04045) ? pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
-    
-      x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
-      y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
-      z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
-    
-      x = (x > 0.008856) ? pow(x, 1/3) : (7.787 * x) + 16/116;
-      y = (y > 0.008856) ? pow(y, 1/3) : (7.787 * y) + 16/116;
-      z = (z > 0.008856) ? pow(z, 1/3) : (7.787 * z) + 16/116;
-    
-      bri = (uint8_t) (116 * y) - 16;
-      X = 500 * (x - y);
-      Y = 200 * (y - z);
+
+      float R = r / 255.0f;
+      float G = g / 255.0f;
+      float B = b / 255.0f;
+
+      R = (R > 0.04045f) ? pow((R + 0.055f) / 1.055f, 2.4f) : R / 12.92f;
+      G = (G > 0.04045f) ? pow((G + 0.055f) / 1.055f, 2.4f) : G / 12.92f;
+      B = (B > 0.04045f) ? pow((B + 0.055f) / 1.055f, 2.4f) : B / 12.92f;
+
+      x = (R * 0.4124f + G * 0.3576f + B * 0.1805f) / 0.95047f;
+      y = (R * 0.2126f + G * 0.7152f + B * 0.0722f) / 1.00000f;
+      z = (R * 0.0193f + G * 0.1192f + B * 0.9505f) / 1.08883f;
+
+      x = (x > 0.008856f) ? pow(x, 1.0f/3.0f) : (7.787f * x) + 16.0f/116.0f;
+      y = (y > 0.008856f) ? pow(y, 1.0f/3.0f) : (7.787f * y) + 16.0f/116.0f;
+      z = (z > 0.008856f) ? pow(z, 1.0f/3.0f) : (7.787f * z) + 16.0f/116.0f;
+
+      bri = (uint8_t) (116.0f * y) - 16;
+      X = 500.0f * (x - y);
+      Y = 200.0f * (y - z);
     }
         
     CRGB convXyToRgb(uint8_t bri, float x, float y) {
